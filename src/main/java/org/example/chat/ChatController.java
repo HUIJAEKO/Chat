@@ -1,7 +1,6 @@
 package org.example.chat;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -29,4 +28,12 @@ public class ChatController {
         chat.setCreatedAt(LocalDateTime.now());
         return chatRepository.save(chat);
     }
+
+    @CrossOrigin
+    @GetMapping(value = "/chat/roomNum/{roomNum}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Chat> findByRoomNum(@PathVariable Integer roomNum){
+        return chatRepository.mFindByRoomNum(roomNum)
+                .subscribeOn(Schedulers.boundedElastic());
+    }
+
 }
